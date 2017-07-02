@@ -1,0 +1,15 @@
+logout:
+    path: /logout
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+api:
+    resource: "@AppBundle/Controller/Api"
+    prefix:   /api/v1/
+    type:     annotation
+
+app_custom:
+    resource: .
+    type: custom

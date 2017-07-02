@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <ol class="breadcrumb">
+                <li><a href="{{ path('task_index') }}">Back to the list</a></li>
+            </ol>
+            <h1>Task</h1>
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ task.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Title</th>
+                        <td>{{ task.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Created</th>
+                        <td>{% if task.dateCreated %}{{ task.dateCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Updated</th>
+                        <td>{% if task.dateUpdated %}{{ task.dateUpdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ task.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>{{ task.status }}</td>
+                    </tr>
+                    <tr>
+                        <th>Priority</th>
+                        <td>{{ task.priority }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a class="btn btn-warning pull-right" href="{{ path('task_edit', { 'id': task.id }) }}">Edit</a>
+            {{ form_start(delete_form) }}
+            <input type="submit" value="Delete" class="btn btn-danger pull-left">
+            {{ form_end(delete_form) }}
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+{% endblock %}

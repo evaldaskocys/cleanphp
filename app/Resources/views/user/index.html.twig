@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1>User list</h1>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Registration Date</th>
+                        <th>Role</th>
+                        <th>Access Token</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><a href="{{ path('user_show', { 'id': user.id }) }}">{{ user.id }}</a></td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% if user.registrationDate %}{{ user.registrationDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{{ user.role }}</td>
+                        <td>{{ user.accessToken }}</td>
+                        <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('user_show', { 'id': user.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('user_edit', { 'id': user.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <a class="btn btn-info" href="{{ path('user_new') }}">Create a new entry</a>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+{% endblock %}

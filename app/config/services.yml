@@ -1,0 +1,91 @@
+services:
+    #_defaults:
+    #    autowire: true
+
+    # Services injected to all controllers
+    AppBundle\Controller\:
+        resource: "../../src/AppBundle/Controller"
+        public: true
+        tags: ['controller.service_arguments']
+
+    app.token_authenticator:
+        class: AppBundle\Security\TokenAuthenticator
+        autowire: true
+        # arguments: ['@doctrine.orm.entity_manager']
+
+    app.base_service:
+        class: AppBundle\Service\BaseService
+        abstract: true
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@event_dispatcher'
+
+    AppBundle\Serializer\UserApiSerializer: ~
+    #app.user_api_serializer:
+    #    class: AppBundle\Serializer\UserApiSerializer
+
+    app.task_api_serializer:
+        class: AppBundle\Serializer\TaskApiSerializer
+        # deprecated: Service %service_id% is deprecated, please use task_serializer instead.
+
+    task_serializer:
+        alias: app.task_api_serializer
+
+    app.task_service:
+        autowire: false
+        class: AppBundle\Service\TaskService
+        parent: app.base_service
+        calls:
+            - [setSerializer, ['@task_serializer']]
+
+    app.task_notification_listener:
+        class: AppBundle\Listener\NotificationListener
+        arguments:
+            - '@mailer'
+            - '@templating'
+        tags:
+            - { name: kernel.event_listener, event: task.created, method: onTaskCreated }
+
+    app.new_user_listener:
+        class: AppBundle\Listener\NewUserConfirmationEmailListener
+        arguments:
+            - '@mailer'
+        tags:
+            - { name: kernel.event_listener, event: user.created, method: onUserCreated }
+
+    app.task_to_test_listener:
+        class: AppBundle\Listener\TaskAssignedToTestListener
+        arguments:
+            - '@mailer'
+            - '@templating'
+        tags:
+            - { name: kernel.event_listener, event: task.assigned_to_test, method: onTaskAssignedToTest }
+
+    app.api_exception_listener:
+        class: AppBundle\Listener\ApiExceptionListener
+        arguments: ['@request_stack']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    app.custom_routing_loader:
+        class: AppBundle\Routing\CustomLoader
+        public: false
+        tags:
+            - { name: routing.loader } # Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\RoutingResolverPass.php
+
+    app.user_service:
+        class: AppBundle\Service\UserService
+        autowire: true
+
+
+    #app.repository.user:
+    #    class: AppBundle\Repository\UserRepository
+    #    factory_service: doctrine.orm.entity_manager
+    #    factory_method:  getRepository
+    #    arguments: [AppBundle\Entiti\User]
+
+    app.user_name_command:
+        class: AppBundle\Command\UserSendMailCommand
+        arguments: ["@=service('doctrine.orm.entity_manager').getRepository('AppBundle:User')"]
+        #arguments: ["@app.repository.user"]
+        tags: [console.command]

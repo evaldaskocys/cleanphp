@@ -1,0 +1,47 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        AppBundle\Entity\User:
+            algorithm: bcrypt
+
+    providers:
+        database_provider:
+            entity:
+                class: AppBundle:User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        api_area:
+            provider: database_provider
+            anonymous: ~
+            pattern: ^/api
+            guard:
+                authenticators:
+                    - app.token_authenticator
+        secured_area:
+            provider: database_provider
+            anonymous: ~
+            pattern: ^/
+            form_login:
+                login_path: login
+                check_path: login
+                default_target_path: security_user
+                always_use_default_target_path: true
+            logout:
+                path: /logout
+                target: /
+            switch_user: { role: ROLE_JEDI, parameter:_take_user }
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/api, roles: ROLE_USER }
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+        ROLE_JEDI: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]

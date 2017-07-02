@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <h1>Task list</h1>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Created</th>
+                        <th>Updated</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for task in tasks %}
+                    <tr>
+                        <td><a href="{{ path('task_show', { 'id': task.id }) }}">{{ task.id }}</a></td>
+                        <td>{{ task.title }}</td>
+                        <td>{% if task.dateCreated %}{{ task.dateCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{% if task.dateUpdated %}{{ task.dateUpdated|date('Y-m-d H:i:s') }}{% endif %}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.status }}</td>
+                        <td>{{ task.priority }}</td>
+                        <td>
+                            <a class="btn btn-xs btn-info pull-left" href="{{ path('task_show', { 'id': task.id }) }}">show</a>&nbsp;
+                            <a class="btn btn-xs btn-info pull-left" href="{{ path('task_test', { 'id': task.id }) }}">test</a>&nbsp;
+                            <a class="btn btn-xs btn-warning pull-left" href="{{ path('task_edit', { 'id': task.id }) }}">edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <a class="btn btn-info" href="{{ path('task_new') }}">Create a new entry</a>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+{% endblock %}

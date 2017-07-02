@@ -1,0 +1,22 @@
+vendor/
+composer.lock
+phpunit.xml
+
+# Cache and logs (Symfony3)
+/var/cache/*
+/var/logs/*
+!var/cache/.gitkeep
+!var/logs/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+
+# Managed by Composer
+/var/bootstrap.php.cache
+
+# Assets and user uploads
+/web/bundles/
+
+# Backup files
+/*~
+*~
