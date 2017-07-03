@@ -1,6 +1,7 @@
 vendor/
 composer.lock
 phpunit.xml
+.idea
 
 # Cache and logs (Symfony3)
 /var/cache/*
@@ -16,6 +17,7 @@ phpunit.xml
 
 # Assets and user uploads
 /web/bundles/
+/web/css/*
 
 # Backup files
 /*~
